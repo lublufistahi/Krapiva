@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <MoveSpeed>k__BackingField: 5
   <JumpForce>k__BackingField: 5
-  <GroundCheckDistance>k__BackingField: 0.1
-  <GroudLayer>k__BackingField:
+  <GroundCheckDistance>k__BackingField: 0.2
+  <GroundLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 64
