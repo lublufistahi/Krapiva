@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76ee9b79b49d4330aca2d8e7bc40a94e, type: 3}
   m_Name: Character Data
   m_EditorClassIdentifier: 
-  <MoveSpeed>k__BackingField: 5
-  <RunSpeed>k__BackingField: 8
-  <JumpForce>k__BackingField: 5
+  <MoveSpeed>k__BackingField: 3
+  <RunSpeed>k__BackingField: 5
+  <JumpForce>k__BackingField: 250
   <FallSpeedMultiplier>k__BackingField: 2
   <LowJumpSpeedMultiplier>k__BackingField: 1.5
-  <GroundCheckRadius>k__BackingField: 0.2
+  <GroundCheckRadius>k__BackingField: 0.1
   <GroundLayer>k__BackingField:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   <Sensitivity>k__BackingField: 3
   <MaxCameraAngle>k__BackingField: 80
   <MinCameraAngle>k__BackingField: -80

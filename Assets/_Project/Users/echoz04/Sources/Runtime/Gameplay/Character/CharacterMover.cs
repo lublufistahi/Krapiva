@@ -1,3 +1,4 @@
+using System;
 using System.Linq.Expressions;
 using UnityEngine;
 
@@ -5,12 +6,16 @@ namespace Sources.Runtime.Gameplay.Character
 {
     public sealed class CharacterMover
     {
+        public event Action<MoveState> OnStateChanged;
+        
         private readonly Rigidbody _rigidbody;
         private readonly CharacterData _data;
         private readonly CharacterInput _input;
         private readonly Transform _feetPoint;
         
         private bool _isGrounded;
+        private Vector3 _moveDirection;
+        private float _currentMoveSpeed;
         
         public CharacterMover(Rigidbody rigidbody, CharacterData data, CharacterInput input, Transform feetPoint)
         {
@@ -20,19 +25,38 @@ namespace Sources.Runtime.Gameplay.Character
             _feetPoint = feetPoint;
         }
 
-        public void HandleMove()
+        public void GatherInput()
         {
             Vector2 moveInput = GetMoveInput();
-            Vector3 moveDirection = new Vector3(moveInput.x, 0f, moveInput.y);
+            _moveDirection = new Vector3(moveInput.x, 0f, moveInput.y);
             
-            moveDirection = _rigidbody.transform.TransformDirection(moveDirection);
+            _moveDirection = _rigidbody.transform.TransformDirection(_moveDirection);
 
+            if (_moveDirection == Vector3.zero)
+            {
+                OnStateChanged?.Invoke(MoveState.Idle);
+                
+                return;
+            }
+
+            if (IsShifting() == true)
+            {
+                _currentMoveSpeed = _data.RunSpeed;
+                OnStateChanged?.Invoke(MoveState.Run);
+            }
+            else
+            {
+                _currentMoveSpeed = _data.MoveSpeed;
+                OnStateChanged?.Invoke(MoveState.Walk);
+            }
+        }
+
+        public void HandleMove()
+        {
             Vector3 current = _rigidbody.linearVelocity;
             
-            var currentMoveSpeed = IsShifting() ? _data.RunSpeed : _data.MoveSpeed;
-
-            Vector3 velocity = new Vector3(moveDirection.x * currentMoveSpeed, current.y, 
-                moveDirection.z * currentMoveSpeed);
+            Vector3 velocity = new Vector3(_moveDirection.x * _currentMoveSpeed, current.y, 
+                _moveDirection.z * _currentMoveSpeed);
 
             _rigidbody.linearVelocity = velocity;
         }

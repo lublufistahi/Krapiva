@@ -8,6 +8,7 @@ namespace Sources.Runtime.Gameplay.Character
     [RequireComponent(typeof(Rigidbody))]
     public sealed class CharacterRoot : MonoBehaviour
     {
+        [SerializeField] private CharacterView _view;
         [SerializeField] private Rigidbody _rigidbody;
         [SerializeField] private Transform _feetPoint;
         [SerializeField] private Transform _cameraHolder;
@@ -23,6 +24,7 @@ namespace Sources.Runtime.Gameplay.Character
         private void OnValidate()
         {
             _rigidbody ??= GetComponent<Rigidbody>();
+            _view ??= GetComponentInChildren<CharacterView>();
         }
 
         public void SetData(CharacterData data) =>
@@ -38,10 +40,13 @@ namespace Sources.Runtime.Gameplay.Character
             _mover = new CharacterMover(_rigidbody, _data, _input, _feetPoint);
             _cameraRotator = new CameraRotator(_cameraHolder, transform, _input, _data);
             _gravityHandler = new GravityHandler(_rigidbody, _data);
+            
+            _view.Initialize(_mover);
         }
 
         private void Update()
         {
+            _mover.GatherInput();
             _mover.CheckGround();
             _mover.HandleJump();
             _cameraRotator.Tick();

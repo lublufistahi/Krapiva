@@ -80,6 +80,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8185863040908214272, guid: 17f8d0d9b286b8d45b4a9568a9837de4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.04105419
+      objectReference: {fileID: 0}
+    - target: {fileID: -8185863040908214272, guid: 17f8d0d9b286b8d45b4a9568a9837de4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.03499777
+      objectReference: {fileID: 0}
+    - target: {fileID: -1250367149808919178, guid: 17f8d0d9b286b8d45b4a9568a9837de4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.16129729
+      objectReference: {fileID: 0}
+    - target: {fileID: -1250367149808919178, guid: 17f8d0d9b286b8d45b4a9568a9837de4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.011154028
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 17f8d0d9b286b8d45b4a9568a9837de4, type: 3}
       propertyPath: m_Name
       value: SK_Boy
@@ -88,6 +104,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 613f94b2f9099d54c8aed4fcbcc54c0d, type: 2}
+    - target: {fileID: 5307379419107393608, guid: 17f8d0d9b286b8d45b4a9568a9837de4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.06381365
+      objectReference: {fileID: 0}
+    - target: {fileID: 5307379419107393608, guid: 17f8d0d9b286b8d45b4a9568a9837de4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.03881533
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 17f8d0d9b286b8d45b4a9568a9837de4, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 6fad2417f58fc703fbb4b50a49d76fea, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
