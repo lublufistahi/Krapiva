@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using UnityEngine;
 
 namespace Sources.Runtime.Gameplay.Character
@@ -26,11 +27,12 @@ namespace Sources.Runtime.Gameplay.Character
             
             moveDirection = _rigidbody.transform.TransformDirection(moveDirection);
 
-
             Vector3 current = _rigidbody.linearVelocity;
+            
+            var currentMoveSpeed = IsShifting() ? _data.RunSpeed : _data.MoveSpeed;
 
-            Vector3 velocity = new Vector3( moveDirection.x * _data.MoveSpeed, current.y, 
-                moveDirection.z * _data.MoveSpeed );
+            Vector3 velocity = new Vector3(moveDirection.x * currentMoveSpeed, current.y, 
+                moveDirection.z * currentMoveSpeed);
 
             _rigidbody.linearVelocity = velocity;
         }
@@ -52,11 +54,12 @@ namespace Sources.Runtime.Gameplay.Character
         
         public void CheckGround()
         {
-            _isGrounded = Physics.Raycast(_feetPoint.position, Vector3.down, 
-                _data.GroundCheckDistance);
+            Vector3 position = _feetPoint.position;
+
+            _isGrounded = Physics.CheckSphere(position, _data.GroundCheckRadius);
             
-            Debug.DrawRay(_feetPoint.position, Vector3.down * _data.GroundCheckDistance, 
-                _isGrounded ? Color.green : Color.red);
+            Color gizmoColor = _isGrounded ? Color.green : Color.red;
+            Debug.DrawRay(position, Vector3.down * 0.1f, gizmoColor);
         }
 
         private Vector2 GetMoveInput() =>
@@ -64,5 +67,8 @@ namespace Sources.Runtime.Gameplay.Character
         
         private bool IsJumped() =>
             _input.Movement.Jump.WasPressedThisFrame();
+        
+        private bool IsShifting() =>
+            _input.Movement.Shift.IsPressed();
     }
 }

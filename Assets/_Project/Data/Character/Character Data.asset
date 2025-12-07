@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Character Data
   m_EditorClassIdentifier: 
   <MoveSpeed>k__BackingField: 5
+  <RunSpeed>k__BackingField: 8
   <JumpForce>k__BackingField: 5
   <FallSpeedMultiplier>k__BackingField: 2
   <LowJumpSpeedMultiplier>k__BackingField: 1.5
-  <GroundCheckDistance>k__BackingField: 0.2
+  <GroundCheckRadius>k__BackingField: 0.2
   <GroundLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 64

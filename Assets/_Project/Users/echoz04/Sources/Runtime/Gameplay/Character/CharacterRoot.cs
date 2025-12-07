@@ -52,6 +52,12 @@ namespace Sources.Runtime.Gameplay.Character
         {
             _mover.HandleMove();
         }
+        
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(_feetPoint.position, _data.GroundCheckRadius);
+        }
 
         private void OnDestroy()
         {
