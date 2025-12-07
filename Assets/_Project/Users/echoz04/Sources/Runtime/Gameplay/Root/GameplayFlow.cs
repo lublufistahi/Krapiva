@@ -30,6 +30,9 @@ namespace Sources.Runtime.Gameplay.Root
 
         private async UniTask RunAsync()
         {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            
             await _gameDataLoader.LoadAsync();
             var characterPrefab = await _resourceLoader.LoadCharacterAsync();
 

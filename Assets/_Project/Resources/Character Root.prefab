@@ -76,7 +76,7 @@ Rigidbody:
   m_GameObject: {fileID: 1196101065167048562}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 1
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -108,6 +108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 1526274150399965701}
   _feetPoint: {fileID: 5490433949720731363}
+  _cameraHolder: {fileID: 7052799587673291930}
 --- !u!136 &7526954404077498751
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -191,8 +192,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_NoiseProfile: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
   m_PivotOffset: {x: 0, y: 0, z: 1}
-  m_AmplitudeGain: 1
-  m_FrequencyGain: 0.6
+  m_AmplitudeGain: 0.65
+  m_FrequencyGain: 0.3
   mNoiseOffsets: {x: -451.37964, y: 684.7062, z: 648.0488}
 --- !u!114 &5308890832941600415
 MonoBehaviour:
