@@ -53,7 +53,7 @@ namespace Sources.Runtime.Gameplay.Character
         public void CheckGround()
         {
             _isGrounded = Physics.Raycast(_feetPoint.position, Vector3.down, 
-                _data.GroundCheckDistance, _data.GroundLayer);
+                _data.GroundCheckDistance);
             
             Debug.DrawRay(_feetPoint.position, Vector3.down * _data.GroundCheckDistance, 
                 _isGrounded ? Color.green : Color.red);
