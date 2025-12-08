@@ -20,6 +20,6 @@ MonoBehaviour:
   <GroundLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 64
-  <Sensitivity>k__BackingField: 3
+  <Sensitivity>k__BackingField: 10
   <MaxCameraAngle>k__BackingField: 80
   <MinCameraAngle>k__BackingField: -80
