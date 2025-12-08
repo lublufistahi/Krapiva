@@ -1,4 +1,4 @@
-namespace Sources.Runtime.Gameplay.Character
+namespace Sources.Runtime.Gameplay.Character.Movement
 {
     public enum MoveState
     {

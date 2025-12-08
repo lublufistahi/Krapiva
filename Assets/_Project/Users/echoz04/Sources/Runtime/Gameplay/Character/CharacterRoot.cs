@@ -1,7 +1,7 @@
-using System;
+using Sources.Runtime.Gameplay.Character.Combat;
 using Sources.Runtime.Services.Loaders.GameData;
 using UnityEngine;
-using VContainer;
+using Sources.Runtime.Gameplay.Character.Movement;
 
 namespace Sources.Runtime.Gameplay.Character
 {
@@ -20,6 +20,7 @@ namespace Sources.Runtime.Gameplay.Character
         private CharacterMover _mover;
         private CameraRotator _cameraRotator;
         private GravityHandler _gravityHandler;
+        private CharacterAttacker _attacker;
 
         private void OnValidate()
         {
@@ -40,8 +41,10 @@ namespace Sources.Runtime.Gameplay.Character
             _mover = new CharacterMover(_rigidbody, _data, _input, _feetPoint);
             _cameraRotator = new CameraRotator(_cameraHolder, transform, _input, _data);
             _gravityHandler = new GravityHandler(_rigidbody, _data);
+            _attacker = new CharacterAttacker(_input);
             
             _view.Initialize(_mover);
+            _attacker.Initialize();
         }
 
         private void Update()

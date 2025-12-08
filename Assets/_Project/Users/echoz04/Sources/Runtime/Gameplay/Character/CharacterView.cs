@@ -1,12 +1,16 @@
 using UnityEngine;
+using Sources.Runtime.Gameplay.Character.Movement;
 
 namespace Sources.Runtime.Gameplay.Character
 {
     [RequireComponent(typeof(Animator))]
     public class CharacterView : MonoBehaviour
     {
-        private readonly int WalkingHash = Animator.StringToHash("isWalking");
-        private readonly int RunningHash = Animator.StringToHash("isRunning");
+        private readonly int IdleHash = Animator.StringToHash("Idle");
+        private readonly int WalkHash = Animator.StringToHash("Walk");
+        private readonly int RunHash = Animator.StringToHash("Run");
+        
+        private const float _crossFadeDuration = 0.15f;
         
         [SerializeField] private Animator _animator;
         
@@ -34,21 +38,15 @@ namespace Sources.Runtime.Gameplay.Character
             switch (state)
             {
                 case MoveState.Idle:
-                    SetAnimatorMoveParameters(false, false);
+                    _animator.CrossFade(IdleHash, _crossFadeDuration/2f);
                     break;
                 case MoveState.Walk:
-                    SetAnimatorMoveParameters(true, false);
+                    _animator.CrossFade(WalkHash, _crossFadeDuration);
                     break;
                 case MoveState.Run:
-                    SetAnimatorMoveParameters(false, true);
+                    _animator.CrossFade(RunHash, _crossFadeDuration);
                     break;
             }
-        }
-
-        private void SetAnimatorMoveParameters(bool walkingState, bool runningState)
-        {
-            _animator.SetBool(WalkingHash, walkingState);
-            _animator.SetBool(RunningHash, runningState);
         }
     }
 }

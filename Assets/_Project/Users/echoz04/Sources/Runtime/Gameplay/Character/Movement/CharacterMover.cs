@@ -1,8 +1,7 @@
 using System;
-using System.Linq.Expressions;
 using UnityEngine;
 
-namespace Sources.Runtime.Gameplay.Character
+namespace Sources.Runtime.Gameplay.Character.Movement
 {
     public sealed class CharacterMover
     {
@@ -16,6 +15,7 @@ namespace Sources.Runtime.Gameplay.Character
         private bool _isGrounded;
         private Vector3 _moveDirection;
         private float _currentMoveSpeed;
+        private MoveState _currentState = MoveState.Idle;
         
         public CharacterMover(Rigidbody rigidbody, CharacterData data, CharacterInput input, Transform feetPoint)
         {
@@ -29,26 +29,24 @@ namespace Sources.Runtime.Gameplay.Character
         {
             Vector2 moveInput = GetMoveInput();
             _moveDirection = new Vector3(moveInput.x, 0f, moveInput.y);
-            
             _moveDirection = _rigidbody.transform.TransformDirection(_moveDirection);
 
+            MoveState newState;
+    
             if (_moveDirection == Vector3.zero)
+                newState = MoveState.Idle;
+            else if (IsShifting())
+                newState = MoveState.Run;
+            else
+                newState = MoveState.Walk;
+
+            if (newState != _currentState)
             {
-                OnStateChanged?.Invoke(MoveState.Idle);
-                
-                return;
+                _currentState = newState;
+                OnStateChanged?.Invoke(_currentState);
             }
 
-            if (IsShifting() == true)
-            {
-                _currentMoveSpeed = _data.RunSpeed;
-                OnStateChanged?.Invoke(MoveState.Run);
-            }
-            else
-            {
-                _currentMoveSpeed = _data.MoveSpeed;
-                OnStateChanged?.Invoke(MoveState.Walk);
-            }
+            _currentMoveSpeed = (_currentState == MoveState.Run) ? _data.RunSpeed : _data.MoveSpeed;
         }
 
         public void HandleMove()
