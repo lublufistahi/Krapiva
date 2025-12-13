@@ -1,96 +1,114 @@
 using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Sources.Runtime.Gameplay.Character.Movement
 {
-    public sealed class CharacterMover
+    public sealed class CharacterMover : IDisposable
     {
         public event Action<MoveState> OnStateChanged;
-        
-        private readonly Rigidbody _rigidbody;
+        public event Action OnJumped;
+        public event Action OnLanded;
+
+        public MoveState CurrentState { get; private set; } = MoveState.Idle;
+        public bool IsGrounded { get; private set; }
+
+        private readonly GravityHandler _gravityHandler;
+        private readonly CharacterController _controller;
         private readonly CharacterData _data;
         private readonly CharacterInput _input;
         private readonly Transform _feetPoint;
-        
-        private bool _isGrounded;
+
         private Vector3 _moveDirection;
-        private float _currentMoveSpeed;
-        private MoveState _currentState = MoveState.Idle;
-        
-        public CharacterMover(Rigidbody rigidbody, CharacterData data, CharacterInput input, Transform feetPoint)
+        private Vector3 _velocity;
+        private Vector3 _slopeSlideVelocity;
+
+        private float _moveSpeed;
+        private bool _jumpRequested;
+        private bool _isJumping = false;
+        private bool _wasGrounded;
+
+        public CharacterMover(GravityHandler gravityHandler, CharacterController controller, CharacterData data,
+            CharacterInput input, Transform feetPoint)
         {
-            _rigidbody = rigidbody;
+            _gravityHandler = gravityHandler;
+            _controller = controller;
             _data = data;
             _input = input;
             _feetPoint = feetPoint;
+
+            _input.Movement.Jump.performed += _ => _jumpRequested = IsGrounded;
         }
 
         public void GatherInput()
         {
-            Vector2 moveInput = GetMoveInput();
-            _moveDirection = new Vector3(moveInput.x, 0f, moveInput.y);
-            _moveDirection = _rigidbody.transform.TransformDirection(_moveDirection);
+            Vector2 inputVector = _input.Movement.Move.ReadValue<Vector2>();
+            _moveDirection = new Vector3(inputVector.x, 0f, inputVector.y);
+            _moveDirection = _controller.transform.TransformDirection(_moveDirection);
 
-            MoveState newState;
-    
-            if (_moveDirection == Vector3.zero)
-                newState = MoveState.Idle;
-            else if (IsShifting())
-                newState = MoveState.Run;
-            else
-                newState = MoveState.Walk;
+            MoveState newState = _moveDirection == Vector3.zero ? MoveState.Idle : IsRunning() ? MoveState.Run : MoveState.Walk;
 
-            if (newState != _currentState)
+            if (newState != CurrentState)
             {
-                _currentState = newState;
-                OnStateChanged?.Invoke(_currentState);
+                CurrentState = newState;
+                OnStateChanged?.Invoke(newState);
             }
 
-            _currentMoveSpeed = (_currentState == MoveState.Run) ? _data.RunSpeed : _data.MoveSpeed;
+            _moveSpeed = CurrentState == MoveState.Run && IsGrounded == true ? _data.RunSpeed : _data.MoveSpeed;
+        }
+
+        public async UniTask HandleJump()
+        {
+            if (IsGrounded == false || _jumpRequested == false)
+                return;
+
+            _isJumping = true;
+            
+            OnJumped?.Invoke();
+            _jumpRequested = false;
+            
+            await UniTask.Delay(TimeSpan.FromSeconds(0.4f));
+
+            _isJumping = false;
+            
+            _velocity.y = Mathf.Sqrt(_data.JumpForce * -2f * Physics.gravity.y);
+        }
+
+        public void ApplyGravity()
+        {
+            _gravityHandler.ApplyGravity(ref _velocity);
         }
 
         public void HandleMove()
         {
-            Vector3 current = _rigidbody.linearVelocity;
-            
-            Vector3 velocity = new Vector3(_moveDirection.x * _currentMoveSpeed, current.y, 
-                _moveDirection.z * _currentMoveSpeed);
-
-            _rigidbody.linearVelocity = velocity;
-        }
-        
-        public void HandleJump()
-        {
-            if (_isGrounded == false)
+            if(_isJumping == true)
                 return;
             
-            if(IsJumped() == false)
-                return;
+            Vector3 horizontal = _moveDirection * _moveSpeed;
+            Vector3 final = new Vector3(horizontal.x, _velocity.y, horizontal.z);
 
-            Vector3 velocity = _rigidbody.linearVelocity;
-            velocity.y = 0f; 
-
-            _rigidbody.linearVelocity = velocity;
-            _rigidbody.AddForce(Vector3.up * _data.JumpForce, ForceMode.Impulse);
+            _controller.Move(final * Time.deltaTime);
+            
+            _velocity.x = _controller.velocity.x;
+            _velocity.z = _controller.velocity.z;
         }
-        
+
         public void CheckGround()
         {
-            Vector3 position = _feetPoint.position;
-
-            _isGrounded = Physics.CheckSphere(position, _data.GroundCheckRadius);
+            bool isGrounded = Physics.CheckSphere(_feetPoint.position, _data.GroundCheckRadius);
             
-            Color gizmoColor = _isGrounded ? Color.green : Color.red;
-            Debug.DrawRay(position, Vector3.down * 0.1f, gizmoColor);
+            if(_wasGrounded == false && isGrounded == true) 
+                OnLanded?.Invoke();
+            
+            IsGrounded = isGrounded;
+            _wasGrounded = isGrounded;
         }
 
-        private Vector2 GetMoveInput() =>
-            _input.Movement.Move.ReadValue<Vector2>();
-        
-        private bool IsJumped() =>
-            _input.Movement.Jump.WasPressedThisFrame();
-        
-        private bool IsShifting() =>
-            _input.Movement.Shift.IsPressed();
+        public void Dispose()
+        {
+            _input.Movement.Jump.performed -= _ => _jumpRequested = true;
+        }
+
+        private bool IsRunning() => _input.Movement.Shift.IsPressed();
     }
 }

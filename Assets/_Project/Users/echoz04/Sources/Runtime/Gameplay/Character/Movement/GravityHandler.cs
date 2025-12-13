@@ -4,25 +4,18 @@ namespace Sources.Runtime.Gameplay.Character.Movement
 {
     public sealed class GravityHandler
     {
-        private readonly Rigidbody _rigidbody;
         private readonly CharacterData _data;
-        
-        public GravityHandler(Rigidbody rigidbody, CharacterData data)
+
+        public GravityHandler(CharacterData data)
         {
-            _rigidbody = rigidbody;
             _data = data;
         }
 
-        public void Tick()
+        public void ApplyGravity(ref Vector3 velocity)
         {
-            var velocity = _rigidbody.linearVelocity;
-            
-            if (velocity.y < 0)
-                velocity += Vector3.up * velocity.y * (_data.FallSpeedMultiplier - 1) * Time.deltaTime;
-            else if (velocity.y > 0)
-                velocity += Vector3.up * velocity.y * (_data.LowJumpSpeedMultiplier - 1) * Time.deltaTime;
+            float gravityMultiplier = velocity.y < 0 ? _data.FallSpeedMultiplier : _data.LowJumpSpeedMultiplier;
 
-            _rigidbody.linearVelocity = velocity;
+            velocity.y += Physics.gravity.y / 2 * gravityMultiplier * Time.deltaTime;
         }
     }
 }

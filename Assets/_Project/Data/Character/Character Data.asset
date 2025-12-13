@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <MoveSpeed>k__BackingField: 3
   <RunSpeed>k__BackingField: 5
-  <JumpForce>k__BackingField: 250
-  <FallSpeedMultiplier>k__BackingField: 2
-  <LowJumpSpeedMultiplier>k__BackingField: 1.5
+  <JumpForce>k__BackingField: 1
+  <FallSpeedMultiplier>k__BackingField: 1.25
+  <LowJumpSpeedMultiplier>k__BackingField: 1
   <GroundCheckRadius>k__BackingField: 0.1
   <GroundLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 0
-  <Sensitivity>k__BackingField: 3
+  <Sensitivity>k__BackingField: 0.1
   <MaxCameraAngle>k__BackingField: 80
   <MinCameraAngle>k__BackingField: -80
