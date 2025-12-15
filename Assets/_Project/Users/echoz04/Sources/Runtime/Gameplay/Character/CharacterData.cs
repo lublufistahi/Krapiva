@@ -6,10 +6,11 @@ namespace Sources.Runtime.Gameplay.Character
     public class CharacterData : ScriptableObject
     {
         [field: SerializeField] public float MoveSpeed { get; private set; }
+        [field: SerializeField] public float RunSpeed { get; private set; }
         [field: SerializeField] public float JumpForce { get; private set; }
         [field: SerializeField] public float FallSpeedMultiplier { get; private set; } = 1.5f;
         [field: SerializeField] public float LowJumpSpeedMultiplier { get; private set; } = 2f;
-        [field: SerializeField] public float GroundCheckDistance { get; private set; }
+        [field: SerializeField] public float GroundCheckRadius { get; private set; }
         [field: SerializeField] public LayerMask GroundLayer { get; private set; }
         [field: Space]
         

@@ -23,8 +23,8 @@ namespace Sources.Runtime.Gameplay.Character
         {
             Vector2 lookPosition = _input.Movement.Look.ReadValue<Vector2>();
             
-            float mouseX = lookPosition.x * _data.Sensitivity * Time.deltaTime;
-            float mouseY = lookPosition.y * _data.Sensitivity * Time.deltaTime;
+            float mouseX = lookPosition.x * _data.Sensitivity;
+            float mouseY = lookPosition.y * _data.Sensitivity;
             
             _xRotation -= mouseY;
             _xRotation = Mathf.Clamp(_xRotation, _data.MinCameraAngle, _data.MaxCameraAngle);
