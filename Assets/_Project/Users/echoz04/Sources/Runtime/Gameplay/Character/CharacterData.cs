@@ -7,6 +7,8 @@ namespace Sources.Runtime.Gameplay.Character
     {
         [field: SerializeField] public float MoveSpeed { get; private set; }
         [field: SerializeField] public float RunSpeed { get; private set; }
+        [field: SerializeField] public float SlideSpeed { get; private set; }
+        [field: SerializeField] public float CheckSlideGroundDuration { get; private set; }
         [field: SerializeField] public float JumpForce { get; private set; }
         [field: SerializeField] public float FallSpeedMultiplier { get; private set; } = 1.5f;
         [field: SerializeField] public float LowJumpSpeedMultiplier { get; private set; } = 2f;

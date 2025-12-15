@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Sources.Runtime.Gameplay.Character.Movement;
 
@@ -37,6 +38,14 @@ namespace Sources.Runtime.Gameplay.Character
         {
             _isJumping = false;
         }
+
+        private void Update()
+        {
+            AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+            
+            if(stateInfo.IsName("Jumping Up") && stateInfo.normalizedTime >= 1.0f)
+                Debug.Log("Jump");
+        }
         
         private void OnDestroy()
         {
@@ -69,6 +78,8 @@ namespace Sources.Runtime.Gameplay.Character
             _isJumping = true;
             _isLanded = false;
             _animator.CrossFade(JumpHash, 0.05f);
+            
+            AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
         }
 
         private void OnLanded()

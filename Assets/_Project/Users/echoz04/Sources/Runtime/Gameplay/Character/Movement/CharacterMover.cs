@@ -63,14 +63,14 @@ namespace Sources.Runtime.Gameplay.Character.Movement
                 return;
 
             _isJumping = true;
-            
+
             OnJumped?.Invoke();
             _jumpRequested = false;
-            
+
             await UniTask.Delay(TimeSpan.FromSeconds(0.4f));
 
             _isJumping = false;
-            
+
             _velocity.y = Mathf.Sqrt(_data.JumpForce * -2f * Physics.gravity.y);
         }
 
@@ -81,14 +81,25 @@ namespace Sources.Runtime.Gameplay.Character.Movement
 
         public void HandleMove()
         {
-            if(_isJumping == true)
+            if (_isJumping == true)
                 return;
-            
+
             Vector3 horizontal = _moveDirection * _moveSpeed;
             Vector3 final = new Vector3(horizontal.x, _velocity.y, horizontal.z);
 
+            if (TryGetGroundHit(out Vector3 slopeDirection) == true)
+            {
+                Vector3 slopeVelocity = slopeDirection.normalized * _data.SlideSpeed;
+                
+                _controller.Move(slopeVelocity * Time.deltaTime);
+            }
+            else
+            {
+                
+            }
+
             _controller.Move(final * Time.deltaTime);
-            
+
             _velocity.x = _controller.velocity.x;
             _velocity.z = _controller.velocity.z;
         }
@@ -96,12 +107,29 @@ namespace Sources.Runtime.Gameplay.Character.Movement
         public void CheckGround()
         {
             bool isGrounded = Physics.CheckSphere(_feetPoint.position, _data.GroundCheckRadius);
-            
-            if(_wasGrounded == false && isGrounded == true) 
+
+            if (_wasGrounded == false && isGrounded == true)
                 OnLanded?.Invoke();
-            
+
             IsGrounded = isGrounded;
             _wasGrounded = isGrounded;
+        }
+
+        public bool TryGetGroundHit(out Vector3 slopeDirection)
+        {
+            slopeDirection = Vector3.zero;
+            
+            if (Physics.Raycast(_controller.transform.position, Vector3.down, out RaycastHit hit, 2f) == false)
+                return false;
+
+            float angle = Vector3.Angle(hit.normal, Vector3.up);
+
+            if(angle <= _controller.slopeLimit)
+                return false;
+
+            slopeDirection = Vector3.ProjectOnPlane(Vector3.down, hit.normal);
+
+            return true;
         }
 
         public void Dispose()

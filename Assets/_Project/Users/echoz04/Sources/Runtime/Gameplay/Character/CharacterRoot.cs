@@ -51,6 +51,12 @@ namespace Sources.Runtime.Gameplay.Character
         {
             _mover.GatherInput();
             _cameraRotator.Tick();
+            Vector3 slopeDirection = Vector3.back;
+            
+            var result = _mover.TryGetGroundHit(out slopeDirection);
+            
+            Debug.Log($"result: {result} and direction {slopeDirection}");
+            Debug.DrawLine(transform.position, transform.position + slopeDirection, Color.red);
         }
 
         private void FixedUpdate()
@@ -67,6 +73,9 @@ namespace Sources.Runtime.Gameplay.Character
 
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(_feetPoint.position, _data.GroundCheckRadius);
+            
+            Gizmos.color = Color.black;
+            Gizmos.DrawRay(transform.position, -transform.up * _data.GroundCheckRadius);
         }
 
         private void OnDestroy()
