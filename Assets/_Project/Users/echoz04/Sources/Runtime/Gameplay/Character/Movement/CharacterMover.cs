@@ -21,7 +21,6 @@ namespace Sources.Runtime.Gameplay.Character.Movement
 
         private Vector3 _moveDirection;
         private Vector3 _velocity;
-        private Vector3 _slopeSlideVelocity;
 
         private float _moveSpeed;
         private bool _jumpRequested;
@@ -92,10 +91,6 @@ namespace Sources.Runtime.Gameplay.Character.Movement
                 Vector3 slopeVelocity = slopeDirection.normalized * _data.SlideSpeed;
                 
                 _controller.Move(slopeVelocity * Time.deltaTime);
-            }
-            else
-            {
-                
             }
 
             _controller.Move(final * Time.deltaTime);

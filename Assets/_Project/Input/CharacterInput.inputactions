@@ -294,12 +294,12 @@
             "actions": [
                 {
                     "name": "LightAttack",
-                    "type": "Value",
+                    "type": "Button",
                     "id": "e6a22201-77b3-4225-95d5-3f51c9081730",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "Tap",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 },
                 {
                     "name": "HeavyAttack",

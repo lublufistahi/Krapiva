@@ -11,6 +11,7 @@ namespace Sources.Runtime.Gameplay.Character
     {
         [SerializeField] private CharacterController _controller;
         [SerializeField] private CharacterView _view;
+        [SerializeField] private CharacterAttackTriggers _attackTriggers;
         [SerializeField] private Transform _feetPoint;
         [SerializeField] private Transform _cameraHolder;
         
@@ -26,6 +27,7 @@ namespace Sources.Runtime.Gameplay.Character
         {
             _controller ??= GetComponent<CharacterController>();
             _view ??= GetComponentInChildren<CharacterView>();
+            _attackTriggers ??= GetComponentInChildren<CharacterAttackTriggers>();
         }
 
         public void SetData(CharacterData data) => 
@@ -41,7 +43,7 @@ namespace Sources.Runtime.Gameplay.Character
             _gravityHandler = new GravityHandler(_data);
             _mover = new CharacterMover(_gravityHandler, _controller, _data, _input, _feetPoint);
             _cameraRotator = new CameraRotator(_cameraHolder, transform, _input, _data);
-            _attacker = new CharacterAttacker(_input);
+            _attacker = new CharacterAttacker(_input, _attackTriggers);
 
             _view.Initialize(_mover);
             _attacker.Initialize();
@@ -49,18 +51,16 @@ namespace Sources.Runtime.Gameplay.Character
 
         private void Update()
         {
-            _mover.GatherInput();
             _cameraRotator.Tick();
+            
             Vector3 slopeDirection = Vector3.back;
             
-            var result = _mover.TryGetGroundHit(out slopeDirection);
-            
-            Debug.Log($"result: {result} and direction {slopeDirection}");
             Debug.DrawLine(transform.position, transform.position + slopeDirection, Color.red);
         }
 
         private void FixedUpdate()
         {
+            _mover.GatherInput();
             _mover.CheckGround();
             _mover.HandleJump().Forget();
             _mover.ApplyGravity();
@@ -82,6 +82,7 @@ namespace Sources.Runtime.Gameplay.Character
         {
             _input.Disable();
             _mover.Dispose();
+            _attacker.Dispose();
         }
     }
 }

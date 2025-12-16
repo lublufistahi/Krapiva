@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <MoveSpeed>k__BackingField: 3
   <RunSpeed>k__BackingField: 6
-  <SlideSpeed>k__BackingField: 2
+  <SlideSpeed>k__BackingField: 3
   <CheckSlideGroundDuration>k__BackingField: 2.11
   <JumpForce>k__BackingField: 1
   <FallSpeedMultiplier>k__BackingField: 2

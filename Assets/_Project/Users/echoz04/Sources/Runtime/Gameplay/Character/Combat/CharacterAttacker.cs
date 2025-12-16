@@ -6,15 +6,17 @@ namespace Sources.Runtime.Gameplay.Character.Combat
     public sealed class CharacterAttacker : IDisposable
     {
         private readonly CharacterInput _input;
+        private readonly CharacterAttackTriggers _triggers;
         
         private Action<UnityEngine.InputSystem.InputAction.CallbackContext> _lightAttackHandler;
         private Action<UnityEngine.InputSystem.InputAction.CallbackContext> _heavyAttackHandler;
 
         private bool _isAttacking = false;
         
-        public CharacterAttacker(CharacterInput input)
+        public CharacterAttacker(CharacterInput input, CharacterAttackTriggers triggers)
         {
             _input = input;
+            _triggers = triggers;
         }
 
         public void Initialize()
